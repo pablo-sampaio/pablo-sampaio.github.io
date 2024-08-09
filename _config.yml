@@ -10,10 +10,10 @@
 ############################
 
 # Name of website
-title: My website
+title: Prof. Pablo A. Sampaio's website
 
 # Your name to show in the footer
-author: Some Person
+author: Pablo A. Sampaio
 
 ###############################################
 # --- List of links in the navigation bar --- #
@@ -85,7 +85,7 @@ social-network-links:
 
 # If you want your website to generate an RSS feed, provide a description
 # The URL for the feed will be https://<your_website>/feed.xml
-rss-description: This website is a virtual proof that I'm awesome
+rss-description: Pablo Sampaio's website
 
 ###########################
 # --- General options --- #
@@ -100,7 +100,7 @@ share-links-active:
 
 # How to display the link to your website in the footer
 # Remove this if you don't want a link in the footer
-url-pretty: "MyWebsite.com"
+url-pretty: "pablo-sampaio.github.io"
 
 # Add the website title to the title of every page
 title-on-all-pages: true
