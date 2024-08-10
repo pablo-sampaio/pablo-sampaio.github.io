@@ -26,7 +26,7 @@ Neste documento, você saberá como acessar e utilizar o **Google Gemini** para 
 
 # 1 - Configurações Iniciais
 
-## Pre requisitos
+## 1.1 - Pré-requisitos
 
 1 - Python 3.9 ou superior.
 
@@ -39,7 +39,7 @@ pip install google-generativeai
 ```
 O seguinte modulo ira instalar a biblioteca **google-generativeai** caso a mesma  não esteja instalada.
 
-## Obtendo uma chave para sua API
+## 1.2 - Obtendo uma chave para sua API
 
 1 - Acesse o seguinte site: [Google API Key.](https://aistudio.google.com/app/apikey?hl=pt-br)
 
@@ -55,14 +55,13 @@ O seguinte modulo ira instalar a biblioteca **google-generativeai** caso a mesma
 
 ---
 
-> **Observação:** 
->
-> A chave de API é um elemento crítico para acessar os serviços fornecidos pela Google API. Essa chave funciona como uma *senha* que autentica suas solicitações para usar os modelos Gemini.
-> 
-> Por esse motivo, deve-se prestar muita atenção para que a mesma não fique disponível publicamente.
+{: .box-warning}
+**Observação:** 
+A chave de API é um elemento crítico para acessar os serviços fornecidos pela Google API. Essa chave funciona como uma *senha* que autentica suas solicitações para usar os modelos Gemini.
+Por esse motivo, deve-se prestar muita atenção para que a mesma não fique disponível publicamente.
 
 
-## Armazenando uma chave de API
+## 1.3 - Armazenando a chave da API
 
 Primeiramente devemos garantir que a chave da API não fique disponível publicamente, é recomendado salvar a sua chave em uma variável de ambiente `GOOGLE_API_KEY`. 
 
@@ -70,9 +69,8 @@ Você pode fazer isso de uma maneira prática criando um arquivo `.env` do seu p
 
 Para isso, siga estes passos 
 
-1 - Crie um arquivvo chamado exatamente `".env"`
-
-2 - Abra-o como arquivo de texto e escreva este conteúdo:
+1. Crie um arquivo chamado exatamente `".env"`
+2. Abra-o como arquivo de texto e escreva este conteúdo:
 
 ```
 GOOGLE_API_KEY=<Sua chave da API>.
@@ -87,7 +85,7 @@ GOOGLE_API_KEY=<Sua chave da API>.
 > 
 
 
-## Algumas funções para ajudar
+## 1.4 - Algumas funções para ajudar
 
 A biblioteca `python-dotenv` serve para lidar com variáveis de ambiente salvas em um arquivo `.env`. Porém, para deixar ainda mais fácil, criamos duas funções:
 - **carrega_chave** : Esta função carrega a chave API armazenada no arquivo .env e configura a biblioteca gemini com essa chave.
@@ -115,9 +113,9 @@ chave = carrega_chave()
 Sua chave estará carregada!
 
 
-# 2 - Utilizando o serviço (Textual)
+# 2 - Utilizando o Serviço para Gerar Texto
 
-## Verificando modelos disponíveis
+## 2.1 - Verificando modelos disponíveis
 
 Primeiramente devemos verificar quais são todos os modelos disponíveis para utilização dsiponibilizados pelo **Google Gemini**.
 
@@ -137,13 +135,12 @@ for model in modelos:
         print(model.name)
 ```
 
-
 Principalmente podemos trabalhar com os modelos mais atualizados, que são estes:
  - **gemini-1.5-flash** - O de melhor custo benefício. **Será utilizado nesta publicação**
  - **gemini-1.5-pro** - O melhor modelo (ou seja, que gera o melhor conteúdo).
 
-## Testes
 
+{: .box-note} 
 Antes de programar com os modelos, caso queira testar a capacidade de todas as versões possíveis, usando interface gráfica, 
 você pode usar o [Google AI Studio](https://aistudio.google.com/)!
 
