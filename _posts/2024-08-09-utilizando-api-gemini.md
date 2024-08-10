@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Utilizando a API do Google Gemini
-subtitle: Use a Mais Recente IA Generativa do Google em Python
+subtitle: Use o Modelo de IA do Google em Python
 cover-img: /assets/img/path.jpg
 thumbnail-img: /assets/img/thumb.png
 share-img: /assets/img/path.jpg
@@ -9,18 +9,18 @@ tags: [books, test]
 author: Vinicius B. Pessoa
 ---
 
-Já vimos aqui no blog como escrever programas em Python integrados o **ChatGPT**. 
-Neste artigo, veremos como fazer o mesmo, porém integrando com o **Gemini**, da Google.
+Neste artigo, não vamos usar a [interface de usuário do Gemini](https://gemini.google.com/).
+O que queremos, aqui, é mostrar como acessá-la por meio do código de um programa Python, usando 
+uma **API** (Interface de Programação de Aplicações) própria do Gemini.
 
-Apenas lembrando que não vamos usar a interface de usuário do ChatGPT. Todo o acesso será feito
-por meio do código de um programa Python, usando uma **API** (Interface de Programação de Aplicações) própria do Gemini.
+***E o que podemos fazer assim?***
 
-E o que podemos fazer assim? Podemos criar programas que usam o ChatGPT adaptado ao contexto específico da sua aplicação. Por exemplo:
-- Você pode dar, ao ChatGPT, acesso a dados específicos do usuário, como documentos ou atividades agendadas.
-- Você pode personalizar o ChatGPT para disparar código Python para realizar cálculos complexos ou outras ações.
-- O ChatGPT pode fazer resumos, classificar textos, ou fazer outro tipo de raciocínio em linguagem natural.
+Podemos criar programas que usam o Gemini adaptado ao contexto específico da sua aplicação. Por exemplo:
+- Para acessar a dados específicos do usuário, como documentos ou atividades agendadas.
+- Para criar resumos, classificar textos, ou fazer outro tipo de raciocínio em linguagem natural.
+- Para fazer o Gemini disparar código Python criado por você.
 
-Enfim, você pode mesclar a capacidade de linguagem e raciocínio do ChatGPT com a capacidade de programação Python tradicional para criar programas inovadores!
+Enfim, você pode mesclar a capacidade de linguagem e raciocínio do Gemini com a capacidade de programação Python tradicional para criar programas inovadores!
 
 Neste documento, você saberá como acessar e utilizar o **Google Gemini** para esse fim.
 
@@ -30,16 +30,16 @@ Neste documento, você saberá como acessar e utilizar o **Google Gemini** para 
 
 1 - Python 3.9 ou superior.
 
-2 - Uma instalação de jupyter para executar o notebook.
-
-3 - Possuir a seguinte biblioteca instalada (google-generativeai)
+2 - Possuir o módulo `google-generativeai` instalado. Para isso, basta rodar o comando abaixo na linha de comando:
 
 ```bash
 pip install google-generativeai
 ```
-O seguinte modulo ira instalar a biblioteca **google-generativeai** caso a mesma  não esteja instalada.
 
-## 1.2 - Obtendo uma chave para sua API
+
+## 1.2 - Obtendo uma Chave para a API
+
+Para acessar os modelos Gemini, você vai precisar de uma chave privada. Para gerá-la, siga estes passos:
 
 1 - Acesse o seguinte site: [Google API Key.](https://aistudio.google.com/app/apikey?hl=pt-br)
 
@@ -49,23 +49,22 @@ O seguinte modulo ira instalar a biblioteca **google-generativeai** caso a mesma
 
 4 - Nesse momento será exibido uma mensagem com os termos de serviço, basta clicar em **OK** para prosseguir.
 
-5 - Uma caixa contendo a opção de **Criar uma chave de API em um novo projeto**, Basta clicar para prosseguir.
+5 - Uma caixa contendo a opção de **Criar uma chave de API em um novo projeto**. Basta clicar para prosseguir.
 
-6 - Parabéns sua chave de API ja foi gerada basta clicar em copiar para acessá-la.
-
----
+6 - Parabéns sua chave de API ja foi gerada. Agora copie a chave e salve-a em algum lugar seguro.
 
 {: .box-warning}
 **Observação:** 
-A chave de API é um elemento crítico para acessar os serviços fornecidos pela Google API. Essa chave funciona como uma *senha* que autentica suas solicitações para usar os modelos Gemini.
+A chave da API é um elemento crítico para acessar os serviços fornecidos pela Google API. 
+Essa chave funciona como uma *senha* que autentica suas solicitações para usar os modelos Gemini.
 Por esse motivo, deve-se prestar muita atenção para que a mesma não fique disponível publicamente.
 
 
-## 1.3 - Armazenando a chave da API
+## 1.3 - Armazenando a Chave da API
 
-Primeiramente devemos garantir que a chave da API não fique disponível publicamente, é recomendado salvar a sua chave em uma variável de ambiente `GOOGLE_API_KEY`. 
+Para garantir que a chave da API não fique disponível publicamente, é recomendado salvá-la em uma variável de ambiente `GOOGLE_API_KEY`. 
 
-Você pode fazer isso de uma maneira prática criando um arquivo `.env` do seu projeto, para ser carregado em código com o módulo `dotenv`.
+Você pode fazer isso de uma maneira prática criando um arquivo `.env` no seu projeto e carregando-o por meio de código Python.
 
 Para isso, siga estes passos 
 
@@ -79,17 +78,16 @@ GOOGLE_API_KEY=<Sua chave da API>.
 3 - Lembrar de substituir o trecho `<Sua chave da API>` pela sua chave.
 
 
-> **Atenção:** 
->
-> Nunca faça o *commit* do arquivo `.env` para um repositório git público, pois é grande o risco de que algum *hacker* a descubra e use.
-> 
+{: .box-warning}
+**Atenção:** 
+Nunca faça o *commit* do arquivo `.env` para um repositório git público! É grande o risco de que algum *hacker* a descubra e use.
 
+## 1.4 - Carregando a Chave em Python
 
-## 1.4 - Algumas funções para ajudar
+Agora, usaremos a biblioteca `python-dotenv` para carregar as variáveis de ambiente salvas em arquivo `.env`. Porém, para deixar mais fácil, criamos duas funções auxiliares:
 
-A biblioteca `python-dotenv` serve para lidar com variáveis de ambiente salvas em um arquivo `.env`. Porém, para deixar ainda mais fácil, criamos duas funções:
-- **carrega_chave** : Esta função carrega a chave API armazenada no arquivo .env e configura a biblioteca gemini com essa chave.
-- **verifica_chave**: Esta função verifica a existência do arquivo .env no sistema.
+- **carrega_chave()** : Carrega a chave da API armazenada no arquivo .env e configura a biblioteca Gemini com essa chave.
+- **verifica_chave()**: Verifica a existência do arquivo .env no sistema.
 
 ```python
 def carrega_chave(): # Carrega uma chave do arquivo .env
@@ -110,12 +108,10 @@ Agora, basta fazer a chamada abaixo e...
 chave = carrega_chave()
 ```
 
-Sua chave estará carregada!
+...sua chave estará carregada!
 
 
-# 2 - Utilizando o Serviço para Gerar Texto
-
-## 2.1 - Verificando modelos disponíveis
+# 2 - Verificando modelos disponíveis
 
 Primeiramente devemos verificar quais são todos os modelos disponíveis para utilização dsiponibilizados pelo **Google Gemini**.
 
@@ -141,25 +137,35 @@ Principalmente podemos trabalhar com os modelos mais atualizados, que são estes
 
 
 {: .box-note} 
-Antes de programar com os modelos, caso queira testar a capacidade de todas as versões possíveis, usando interface gráfica, 
-você pode usar o [Google AI Studio](https://aistudio.google.com/)!
+Antes de programar com os modelos, caso queira testar a capacidade de todas as versões possíveis usando uma interface amigável, 
+use o [Google AI Studio](https://aistudio.google.com/)!
 
-## Primeiros passos com o modelo
 
-Este código instancia uma classe para acessar o modelo remotamente (o modelo não é carregado localmente).
+# 3 - Gerando Texto com o Modelo
+
+Depois dessa longa preparação, vamos usar o modelo!
+
+Este código instancia uma classe para acessar o modelo remotamente (lembrando que o modelo não é carregado localmente).
 
 ```python
 model = gemini.GenerativeModel('gemini-1.5-flash')
 ```
 
-Nesse caso vou solicitar **"faça um resumo em uma linha de:"** a função **statistics.median_high** do python
+Agora, vamos usá-lo em dois exemplos
 
-A fonte desse trecho é da documentação oficial do python: [Documentação do Python: statistics.median_high](https://docs.python.org/pt-br/3/library/statistics.html#statistics.median_high)
+## 3.1 - Gerando resumo
 
-Agora, vamos receber nossa primeira mensagem via código:
+Netse caso vou solicitar ao modelo para fazer um resumo de um trecho da [documentação da função `statistics.median_high()`](https://docs.python.org/pt-br/3/library/statistics.html#statistics.median_high) de Python.
+
+Agora, vamos receber nossa primeira resposta do modelo via código, assim:
 
 ```python
-resposta = model.generate_content("faça um resumo em uma linha de: statistics.median_high(data) Retorna a mediana superior de dados numéricos. Se data for vazio, a exceção StatisticsError é levantada. data pode ser uma sequência ou um iterável. A mediana superior sempre é um membro do conjunto de dados. Quando o número de elementos for ímpar, o valor intermediário é retornado. Se houver um número par de elementos, o maior entre os dois valores centrais é retornado.")
+resposta = model.generate_content("Faça um resumo em uma linha desse texto:"
+    + "statistics.median_high(data) Retorna a mediana superior de dados numéricos. Se data for vazio, "
+    + "a exceção StatisticsError é levantada. data pode ser uma sequência ou um iterável. "
+    + "A mediana superior sempre é um membro do conjunto de dados. Quando o número de elementos for ímpar, "
+    + "o valor intermediário é retornado. "
+    + "Se houver um número par de elementos, o maior entre os dois valores centrais é retornado.")
 ```
 
 Agora, você pode investigar algumas informações da `resposta` recebida com este código:
@@ -178,9 +184,13 @@ candidates_token_count: 37
 total_token_count: 139
 ```
 
-Logo nesse podemos ja realizar a utilização desse modelo dentro de uma aplicação, exemplo:
+A saída retornada pelo campo `.usage_metadata` indica quantos "tokens" foram usados do modelo. Os tokens são proporcionais à quantidade de palavras e são usados para definir o valor a ser cobrado pelo uso. (Mas vamos usá-lo dentro dos limites gratuitos aqui). 
 
-Imagine que tenhamos um app que recomenda receitas para o usuário baseando-se nos ingredientes possuídos pelo usuário.
+## 3.2 - Criando receitas
+
+Neste segundo exemplo, queremos dar uma ideia de como usar esse modelo dentro de uma aplicação.
+A ideia seria criar um *app* que recomenda receitas para o usuário baseando-se nos ingredientes possuídos pelo usuário.
+
 O código abaixo vai ler os ingredientes digitados e montar um **prompt** (ou *query*), ou seja, uma pergunta ou comando para o modelo.
 
 
@@ -201,7 +211,7 @@ resposta = model.generate_content(prompt)
 # Imprime a resposta textual
 print(resposta.text) 
 
-# Informações como número de tokens usados
+# Informações sobre quantidades de tokens usados
 print(resposta.usage_metadata) 
 ```
 
@@ -238,3 +248,36 @@ prompt_token_count: 33
 candidates_token_count: 467
 total_token_count: 500
 ```
+
+Como você pode perceber, uma receita nova foi gerada pelo modelo! 
+
+
+## 3 - Utilizando imagens
+
+Agora, vamos ver vamos utilizar o serviço passando uma imagem como entrada.
+
+Primeiramente devemos carregar uma imagem em uma variável, para isso vou utilizar a biblioteca PLT a imagem está armazenada em "Imagens\animal.jpg"  a partir do diretório que esse script está escrito.
+
+Usando um notebook Jupyter, esta célula de código irá exibir a imagem:
+
+```python
+from IPython.display import Image as IPImage
+import PIL.Image
+img = PIL.Image.open(r'Imagens\animal.jpg')
+img
+```
+
+{: .box-note}
+No final deste artigo tem o link para o notebook com todo o código mostrado aqui.
+
+
+... (ainda a finalizar) ...
+
+
+## Referências
+
+- Documentação oficial da API do Gemini: [Documentação](https://ai.google.dev/gemini-api/docs?hl=pt-br)
+- Documentação official da função statistics.median_high: [Documentação do Python: statistics.median_high](https://docs.python.org/pt-br/3/library/statistics.html#statistics.median_high)
+- Imagem utilizada: [Imagens](https://www.istockphoto.com/br/fotos/capivara)
+- Link para o repositório: ...
+
