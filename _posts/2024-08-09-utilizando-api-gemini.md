@@ -9,7 +9,7 @@ tags: [books, test]
 author: Vinicius B. Pessoa
 ---
 
-Neste artigo, não vamos usar a [interface de usuário do Gemini](https://gemini.google.com/).
+Neste artigo, não vamos usar a [interface do Gemini para usuários em geral](https://gemini.google.com/).
 O que queremos, aqui, é mostrar como acessá-la por meio do código de um programa Python, usando 
 uma **API** (Interface de Programação de Aplicações) própria do Gemini.
 
@@ -141,7 +141,7 @@ Principalmente podemos trabalhar com os modelos mais atualizados, que são estes
 o [Google AI Studio](https://aistudio.google.com/)!
 
 
-# 3 - Gerando Texto com o Modelo
+# 3 - Usando apenas Texto
 
 Depois dessa longa preparação, vamos usar o modelo!
 
@@ -252,31 +252,127 @@ total_token_count: 500
 Como você pode perceber, uma receita nova foi gerada pelo modelo! 
 
 
-## 4 - Utilizando imagens
+## 4 - Fornecendo Imagens
 
 Agora, vamos ver vamos utilizar o serviço passando uma imagem como entrada.
 
 Primeiramente devemos carregar uma imagem em uma variável, para isso vou utilizar a biblioteca PLT a imagem está armazenada em "Imagens\animal.jpg"  a partir do diretório que esse script está escrito.
 
-Usando um notebook Jupyter, esta célula de código irá exibir a imagem:
+Vamos usar o módulo `PIL` em um notebook Jupyter para exibir uma imagem localizada em `Imagens\animal.jpg`.
+Crie uma célula de código e escreva o código abaixo para exibir a imagem:
 
 ```python
 from IPython.display import Image as IPImage
 import PIL.Image
+
 img = PIL.Image.open(r'Imagens\animal.jpg')
 img
 ```
+
+Saída:
+
+![Imagem de uma Capivara](https://github.com/ViniciusBPessoa/Repositorio_Academico_Multidisciplinar/blob/main/Extencao/Post_01/Imagens/animal.jpg?raw=true)
+
+A partir desse momento já é possível enviar essa imagem como entrada para o modelo, e obter a resposta dele.
+
+```python
+resposta = model.generate_content(img)
+print(resposta.text)
+```
+
+Saída:
+```
+This is a capybara. It is the largest rodent in the world and is native to South America. Capybaras are semi-aquatic and are often found near bodies of water. They are herbivores and are known for their docile nature.
+```
+
+Vamos agora ver como enviar **uma imagem e um texto** para alguma finalidade específica. 
+Por exemplo, vamos pedir para o modelo simplesmente identificar o animal presente na imagem de forma mais direta.
+
+Para isso, basta que enviemos uma lista **`[A, B]`** contendo:
+
+A - Texto de entrada, nesse caso `"Identifique esse o animal nessa imagem"`.
+
+B - Variável contendo a imagem.
+
+
+```
+resposta = model.generate_content(["Identifique esse o animal nessa imagem", img])
+print(resposta.text)
+```
+
+Saída:
+```
+Esse é um capivara.
+```
+
 
 {: .box-note}
 No final deste artigo tem o link para o notebook com todo o código mostrado aqui.
 
 
-... (ainda a finalizar) ...
-
-
 # 5 - Utilizando para Conversar (Chat)
 
-... (falta finalizar)...
+Agora, veremos como usar no modo de conversa (*chat*), permitindo uma interação contínua com um usuário. 
+
+Para isso, vamos usar uma classe especializada que armazena o histórico de mensagens trocadas.
+Você pode instanciá-la assim:
+
+```python
+chat_model = model.start_chat(history=[])
+```
+
+Agora, você pode enviar uma mensagem e ver a resposta assim:
+
+```python
+resposta = chat_model.send_message("Escreva uma linha de uma historia sobre o cachorro bernardo")
+print(resposta.text)
+```
+
+Agora é possível ver todo o histórico de mensagens usando o seguinte comando:
+
+```python
+chat_model.history
+```
+
+Em um notebook Jupyter, você veria esta saída:
+```
+[parts {
+   text: "Escreva uma linha de uma historia sobre o cachorro bernardo"
+ }
+ role: "user",
+ parts {
+   text: "A cauda de Bernardo, geralmente um borrão feliz, caiu ao chão quando ele percebeu que o bebê estava desaparecido. \n"
+ }
+ role: "model"]
+```
+
+Vamos enviar outra mensagem e examinar a resposta:
+
+```python
+resposta = chat_model.send_message("Troque o nome de bernardo para severino")
+print(resposta.text)
+```
+
+Saída:
+```
+A cauda de Severino, geralmente um borrão feliz, caiu ao chão quando ele percebeu que o bebê estava desaparecido.
+```
+
+A forma de acessar o modelo acima garante que haja uma continuidade no envio de mensagens para o modelo, 
+permitindo que cada nova mensagem seja analisada no contexto da conversa anterior (como demonstrado pela troca do nome do cachorro).
+
+Para finalizar, vamos ver como acessar os detalhes da conversa:
+
+```python
+for mensagem in chat_model.history:
+  print(f'{mensagem.role}: {mensagem.parts[0].text}')
+```
+
+Cada item de `chat_model.history` (acessado pela variável `mensagem`) tem:
+- o campo `.role` para indicar quem mandou a mensagem ("user" ou "model"),
+- o campo `.parts` para indicar cada parte da mensagem, que pode ser texto ou imagem (na maioria dos casos, tem apenas uma parte, contendo texto).
+
+Agora você deve ser capaz de usar os modelos `Gemini` para criar projetos inovadores!
 
 
 ## Referências
