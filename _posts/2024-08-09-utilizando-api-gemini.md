@@ -137,8 +137,8 @@ Principalmente podemos trabalhar com os modelos mais atualizados, que são estes
 
 
 {: .box-note} 
-Antes de programar com os modelos, caso queira testar a capacidade de todas as versões possíveis usando uma interface amigável, 
-use o [Google AI Studio](https://aistudio.google.com/)!
+**Dica**: Antes de programar com os modelos, você pode testar todos eles usando uma interface amigável:
+o [Google AI Studio](https://aistudio.google.com/)!
 
 
 # 3 - Gerando Texto com o Modelo
@@ -252,7 +252,7 @@ total_token_count: 500
 Como você pode perceber, uma receita nova foi gerada pelo modelo! 
 
 
-## 3 - Utilizando imagens
+## 4 - Utilizando imagens
 
 Agora, vamos ver vamos utilizar o serviço passando uma imagem como entrada.
 
@@ -272,6 +272,11 @@ No final deste artigo tem o link para o notebook com todo o código mostrado aqu
 
 
 ... (ainda a finalizar) ...
+
+
+# 5 - Utilizando para Conversar (Chat)
+
+... (falta finalizar)...
 
 
 ## Referências
