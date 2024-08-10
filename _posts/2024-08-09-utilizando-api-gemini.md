@@ -9,8 +9,11 @@ tags: [books, test]
 author: Vinicius B. Pessoa
 ---
 
+O **Gemini** é um novo modelo de linguagem que veio competir com o **ChatGPT/GPT** da OpenAI. 
+A versão Gemini 1.5 (e subversões) veio competir diretamente com o GPT 4 (e subversões).
+
 Neste artigo, não vamos usar a [interface do Gemini para usuários em geral](https://gemini.google.com/).
-O que queremos, aqui, é mostrar como acessá-la por meio do código de um programa Python, usando 
+O que queremos, aqui, é mostrar como acessar o *Gemini* por meio do código de um programa Python, usando 
 uma **API** (Interface de Programação de Aplicações) própria do Gemini.
 
 ***E o que podemos fazer assim?***
