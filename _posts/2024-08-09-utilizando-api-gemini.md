@@ -380,8 +380,8 @@ Agora você deve ser capaz de usar os modelos `Gemini` para criar projetos inova
 
 ## Referências
 
-- Documentação oficial da API do Gemini: [Documentação](https://ai.google.dev/gemini-api/docs?hl=pt-br)
-- Documentação official da função statistics.median_high: [Documentação do Python: statistics.median_high](https://docs.python.org/pt-br/3/library/statistics.html#statistics.median_high)
-- Imagem utilizada: [Imagens](https://www.istockphoto.com/br/fotos/capivara)
+- Documentação oficial da API do Gemini: https://ai.google.dev/gemini-api/docs?hl=pt-br
+- Documentação official da função statistics.median_high: https://docs.python.org/pt-br/3/library/statistics.html#statistics.median_high
+- Imagem utilizada: https://www.istockphoto.com/br/fotos/capivara
 - Link para o repositório: ...
 
