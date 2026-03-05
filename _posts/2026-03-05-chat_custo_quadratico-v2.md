@@ -195,11 +195,8 @@ C(N) = m \times (N^2)
 $$
 
 
-**Assim, vemos que o custo total $C(N)$ é uma função quadrática do N!**
+Note que o custo total $C(N)$ é uma função quadrática do N! Por isso:
 
-> Que fique claro: trata-se do custo para usar o modelo para gerar as $N$ respostas ao longo de *toda* a conversa.
-
-Resumimos esta propriedade assim:
 
 {: .box-success}
 ***O custo total de um chat cresce quadraticamente com o número de interações.***
@@ -214,29 +211,33 @@ Cito algumas apenas para exemplificar, sem esgotar o assunto:
 
 ## 4.1 - Custo de conversas longas cresce rápido demais
 
-Com a relação quadrática encontrar entre o tamanho da conversa $N$ e o custo $C(N)$, os custos entre conversas terão relações assim:
-- Se uma conversa dobrar de tamanho (ex.: de 3 para 6 interações), o seu custo quadruplica ($\times 4$).
-- Se ela triplicar de tamanho (ex.: de 3 para 9 interações), o seu custo é multiplicado por nove ($\times 9$).
-- Se ela quadruplicar de tamanho (ex.: de 3 para 12 interações), o seu custo é multiplicado por dezesseis ($\times 16$).
+Com essa relação quadrática, teremos situações assim:
 
-Enfim, **chats longos são estruturalmente caros**. 
+- Se uma conversa dobrar de tamanho (ex.: de 3 para 6 interações), o seu custo *quadruplica*.
+- Se ela triplicar de tamanho (ex.: de 3 para 9 interações), o seu custo é *multiplicado por nove*.
+- Se ela quadruplicar de tamanho (ex.: de 3 para 12 interações), o seu custo é *multiplicado por dezesseis*!
 
-> Tem certeza que quer deixar o seu usuário conversar livremente?
+Enfim, **chats longos são estruturalmente caros**. (Sem contar do problema de *context rot* que pode surgir.)
+
+> E agora, tem certeza que quer deixar o seu usuário conversar livremente?
 
 ---
 
 ## 4.2. Engenharia de Contexto passa a ser Essencial
 
-Ok, você até pode deixar seu usuário conversar livremente (ou quase isso). Mas precisa definir uma estratégia para diminuir o impacto.
+Ok, você até pode deixar seu usuário conversar livremente (ou quase isso). Mas, para não pagar caro, você precisa usar alguma técnica para diminuir o impacto.
 
-Algumas técnicas simples para lidar com isso:
-- truncamento de histórico
-- sumarização de conversas
-- salvar parte da conversa em memória externa, para recuperar quando necessário
-- iniciar um novo contexto, quando a requisição for nova (não for continuação do assunto anterior)
+Essas técnicas fazem parte da chamada **Engenharia de Contexto**, que trata de como manter o contexto mais relevante possível, com o menor tamanho possível.
 
-> Essas técnicas fazem parte da chamada **Engenharia de Contexto** (qua trata de como manter o contexto mais relevante possível, com o menor tamanho possível).
-> O que é chamado de "contexto", aqui, é a apenas "entrada" do modelo. Que é simplesmente o "histórico", no caso tratado aqui.
+> Considere que, basicamente, **contexto**, aqui, é o mesmo que **(tokens) de entrada** do modelo. 
+
+Até aqui, estamos usando todo o nosso **histórico** como *contexto*. Mas podemos usar um contexto menor do que o histórico.
+
+Algumas técnicas simples para isso:
+- truncar o histórico
+- sumarizar interações antigas
+- salvar parte da conversa em memória externa
+- iniciar um novo contexto, quando a requisição for nova (sem relação com o assunto anterior)
 
 ---
 
@@ -249,8 +250,6 @@ Na prática, o custo real pode diferir das fórmulas acima por alguns motivos:
 
 Mesmo levando essas características em consideração, a **tendência quadrática continua válida**.
 
-Quando pensamos em escala — milhares ou milhões de conversas — entender a matemática do contexto se torna fundamental.
+Você precisa estar atento a isso ao criar uma aplicação conversacional.
 
-E, aqui, quis apenas mostrar a importância do tema. Você precisa estar atento a isso ao criar uma aplicação conversacional.
-
----
+Quando pensamos em escala — milhares ou milhões de conversas — o impacto dessa "matemática" do contexto pode ser muito significativa para o negócio.
