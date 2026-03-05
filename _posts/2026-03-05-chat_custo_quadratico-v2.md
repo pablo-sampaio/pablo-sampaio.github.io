@@ -37,27 +37,29 @@ Para entender o porquê, vamos ver como funciona um chat usando modelos de lingu
 
 ## 2 - Chat com Modelos Transformers (LLMs e similares)
 
-Aqui, estamos tratando de *aplicações de conversação* baseadas em redes neurais da arquitetura transformer autorregressiva. Esta é a tecnologia dos modelos mais famosos atualmente, sejam grandes (como os GPTs, Geminis e Claudes) ou pequenos (como os Gemmas e alguns LLamas e Qwens).
+Aqui, estamos tratando de *aplicações de conversação* baseadas em redes neurais *Transformers Autorregressivas*. Esta é a técnica dos modelos mais famosos atualmente, sejam grandes (como os GPTs, Geminis e Claudes) ou pequenos (como os Gemmas e alguns LLamas e Qwens).
 
 Simplificadamente, estes modelos recebem um *texto de entrada* e retornam um *texto de saída*. Cada texto desse é subdividido em *tokens*, que você pode assumir que são "palavras". (Na verdade, pode ser partes de palavras, pontuações e símbolos).
 
 Por isso, as aplicações de conversação (chats) vão repetir esse loop:
 
-1. O usuário envia uma mensagem (requisição) pela aplicação.
-1. A aplicação coleta o **histórico anterior** da conversa e adiciona a nova requisição ao final (usando certos "separadores").
+1. O usuário envia uma nova mensagem de requisição.
+1. A aplicação coleta o **histórico anterior** da conversa e adiciona a nova requisição ao final (usando tokens "separadores").
 1. Esse histórico é enviado ao modelo como "texto de entrada".
-1. O modelo gera a próxima resposta (do assistente de conversa) como "texto de saída". 
-1. Essa resposta é acrescentada ao final do histórico (e exibida ao usuário, geralmente).
+1. O modelo gera a próxima resposta (do assistente de conversa) como *texto de saída*. 
+1. Essa resposta é acrescentada ao final do histórico. (E exibida ao usuário, geralmente).
 
-Esse processo se repete, com um histórico cada vez maior! 
+**Esse processo se repete, com um histórico cada vez maior!**
 
 Agora, junte essas duas informações:
 - uma entrada cada vez maior enviada ao modelo
-- modelos que cobram (em dólar!) valores que dependem do tamanho da entrada
+- modelos cobram (em dólar!) valores que dependem do tamanho da entrada.
 
-Qual a consequência delas? **Um custo quadrático**!
+Qual a consequência delas? 
 
-Vamos a uma explicação matemática simplificada.
+**Um custo quadrático**!
+
+Vamos a uma explicação matemática.
 
 
 ## 3 - Modelo Matemático Simplificado
@@ -65,21 +67,22 @@ Vamos a uma explicação matemática simplificada.
 Para modelar matematicamente, vamos assumir algumas simplificações:
 
 - Cada mensagem (do usuário ou do assistente) possui o mesmo tamanho:  
-$ m \text{ tokens} $.
+$m \text{ tokens}$.
 
-- Considere que o custo que você paga ao *model provider* (como a OpenAI) é igual **tamanho da entrada** enviada ao modelo, em centavos. Isso quer dizer que:
+- Considere que o custo que você paga ao *model provider* (como a OpenAI) é igual **tamanho da entrada** enviada ao modelo, em centavos. Ou seja: 
    - Se você enviar 10 tokens de entrada, o modelo cobra \$ 0,10.
-   - Considere que os tokens de saída não são cobrados. (Depois a gente falar deles.)
 
-- Tokens usados para separar as mensagens não são cobrados.
+- Não vamos considerar cobrança por:
+   - Token de saída (Calma! É uma simplificação!)
+   - Tokens que separam as mensagens.
 
 Nas próximas seções:
-- Vamos descobrir quantos tokens são usados (e cobrados) a cada turno de interação
-- Vamos usar isso para definir o custo total de uma conversa
+- Vamos descobrir quantos tokens são usados e cobrados a cada turno de interação.
+- Vamos usar isso para definir o custo total de uma conversa.
 
 ## 3.1 - Quantos tokens são cobrados por interação?
 
-Vamos definir uma função $T(n)$ que dá a quantidade de **tokens de entrada** necessária somente para gerar a **$n$-ésima resposta** do assistente. 
+Vamos definir uma função (/T(n)/) que dá a quantidade de **tokens de entrada** necessária somente para gerar a **$n$-ésima resposta** do assistente. 
 
 Na nossa simplificação, essa função também representa o **custo de gerar uma resposta do assistente** na interação $n$.
 
