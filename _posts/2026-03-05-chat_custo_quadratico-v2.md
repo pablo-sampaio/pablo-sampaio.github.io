@@ -77,40 +77,38 @@ $m \text{ tokens}$.
    - Tokens que separam as mensagens.
 
 Nas próximas seções:
-- Vamos descobrir quantos tokens são usados e cobrados a cada turno de interação.
+- Vamos descobrir quantos tokens são cobrados a cada  interação.
 - Vamos usar isso para definir o custo total de uma conversa.
 
 ## 3.1 - Quantos tokens são cobrados por interação?
 
-Vamos definir uma função (/T(n)/) que dá a quantidade de **tokens de entrada** necessária somente para gerar a **$n$-ésima resposta** do assistente. 
+Vamos definir uma função $T(n)$ que dá a quantidade de **tokens de entrada** enviada na interação $n$, para gerar uma resposta do assistente.
 
-Na nossa simplificação, essa função também representa o **custo de gerar uma resposta do assistente** na interação $n$.
+Na nossa simplificação, $T(n)$ dá também o próprio **custo de gerar uma resposta** na interação $n$.
 
-Vamos propor uma fórmula para $T(n). Para isso, vamos examinar os valores dessa função à medida que a conversa avança.
+Vamos propor uma fórmula para $T(n)$. Para isso, vamos examinar os valores dessa função à medida que a conversa avança.
+
+---
 
 ### Primeira interação
 
-Lembre-se que a "entrada" enviada para o modelo é o histórico de mensagens, acrescido da mais recente requisição do usuário.
+Lembre-se que a "entrada" enviada para o modelo é o histórico de mensagens contendo também a mais recente requisição do usuário.
 
-Na primeira interação, o histórico passado é vazio. Assim, será enviada ao modelo apenas 1 mensagem:
+Na primeira interação, não há mensagens anteiores. Assim, será enviada ao modelo apenas 1 mensagem:
   - a primeira requisição do usuário
 
-Essa mensagem tem $m$ tokens (tamanho padrão que assumimos), logo a quantidade de tokens enviados como entrada ao modelo é:
+Essa mensagem tem $m$ tokens (tamanho padrão que assumimos). Logo a quantidade de tokens enviados ao modelo é:
 
 $$
 T(1) = 1 \times m
 $$
 
-> *Lembrando: A partir dessa quantidade de tokens é que o modelo irá gerar a primeira resposta do assistente.*
-
----
-
 ### Segunda interação
 
-Agora, o histórico terá 2 mensagens passadas e 1 nova:
-- requisição 1 do usuário 
-- resposta 1 do assistente
-- requisição 2 (nova) do usuário
+Agora, o histórico terá 2 mensagens anteriores e 1 nova mensagem:
+- a requisição 1 do usuário 
+- a resposta 1 do assistente
+- a requisição 2 (nova) do usuário
 
 O total de tokens enviados será:
 
@@ -118,16 +116,15 @@ $$
 T(2) = 3 \times m
 $$
 
----
 
 ### Terceira interação
 
 O histórico a ser enviado conterá cinco mensagens:
-- requisição 1 (do usuário)
-- resposta 1 (do assistente)
-- requisição 2 
-- resposta 2
-- requisição 3 (nova)
+- a requisição 1 (do usuário)
+- a resposta 1 (do assistente)
+- a requisição 2 
+- a resposta 2
+- a requisição 3 (nova)
 
 Logo, a quantidade de tokens será:
 
@@ -135,7 +132,6 @@ $$
 T(3) = 5 \times m
 $$
 
----
 
 ### Quarta interação
 
@@ -145,13 +141,12 @@ $$
 T(4) = 7 \times m
 $$
 
----
 
 ### Fórmula geral
 
-Note que, à medida que aumentamos o $n$ da interação, o fator que multiplica $m$ assume valores sucessivos da sequência dos *ímpares positivos*.
+Note que, à medida que aumentamos o $n$ da interação, o fator que multiplica $m$ assume valores sucessivos da *sequência dos ímpares positivos*.
 
-Para abreviar a discusão, o padrão geral é dado por:
+Sendo bem direto, o padrão geral é dado por:
 
 $$
 T(n) = (2n - 1) \times m
@@ -161,21 +156,21 @@ Ou seja, **o custo de gerar cada resposta cresce linearmente** com o tamanho da 
 
 > Ai você me diz: "Mas espera! Não era para crescer de forma **quadrática**??"
 
-Calma! Aqui, medimos o custo de gerar apenas 1 resposta!
+Calma! Até aqui, medimos o custo de gerar apenas 1 resposta!
 
 Vamos analisar o custo total do chat a seguir.
 
 ---
 
-## 3.2 - O Ponto Crítico: o Custo Acumulado do Chat
+## 3.2 - Ponto crítico: Qual o custo total do chat?
 
-Aqui, queremos quantificar o custo $C(N)$ de uma conversa, como uma função da quantidade de interações $N$ realizadas.
+Agora, queremos quantificar o custo $C(N)$ de gerar respostas em uma conversac om $N$ interações.
 
-Obivamente, uma conversa (chat) om $N$ interações precisará acionar o modelo $N$ vezes, para gerar as $N$ respostas do assistente.
+Lembrando que:
+- Uma conversa (chat) com $N$ interações acionará o modelo $N$ vezes, para gerar as $N$ respostas do assistente,
+- O custo de cada resposta é dado pelo $T(n)$ que discutimos antes. 
 
-O custo de cada resposta é dado pelo $T(n)$ que discutimos antes. 
-
-Assim, por definição, o custo total da conversa $C(N)$ é dado pelo os vários valores de $T(n)$ de 1 a N, assim:
+Assim, por definição, o custo total da conversa $C(N)$ é dado pela soma dos valores de $T(n)$ de 1 a N, assim:
 
 $$
 C(N) = T(1) + T(2) + T(3) + \dots + T(N)
@@ -187,32 +182,31 @@ $$
 C(N) = 1m + 3m + 5m + \dots + (2N-1)m
 $$
 
-Fatorando por $m$ (à direita):
+Fatorando por $m$ (à esquerda):
 
 $$
-C(N) = (1 + 3 + 5 + \dots + (2N-1)) \times m
+C(N) = m \times (1 + 3 + 5 + \dots + (2N-1))
 $$
 
-A soma dos **N primeiros números ímpares** é bem conhecida na Matemática, e vale $N^2$. 
-
-Logo, podemos remover o trecho entre parênteses assim:
+A soma dos **N primeiros números ímpares** é bem conhecida na Matemática e vale $N^2$. Logo:
 
 $$
-C(N) = N^2  \times m
+C(N) = m \times (N^2)
 $$
 
 
-Assim, vemos que o custo total $C(N)$ tem sim um fator quadrático!
+**Assim, vemos que o custo total $C(N)$ é uma função quadrática do N!**
 
-(Que fique claro: trata-se do custo para usar o modelo para gerar as respostas ao longo de toda a conversa).
+> Que fique claro: trata-se do custo para usar o modelo para gerar as $N$ respostas ao longo de *toda* a conversa.
 
-Resumimos essa conclusão assim:
+Resumimos esta propriedade assim:
 
-**o custo total de um chat cresce quadraticamente com o número de interações.**
+{: .box-success}
+***O custo total de um chat cresce quadraticamente com o número de interações.***
 
 ---
 
-# 4. O que isso significa na prática?
+# 4. O Que Isso Significa na Prática?
 
 Essa propriedade tem algumas consequências importantes que podem não ser intuitivas. 
 
